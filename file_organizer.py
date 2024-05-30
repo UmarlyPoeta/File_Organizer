@@ -15,16 +15,11 @@ root.title(" FILE ORGANIZER")
 customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("dark-blue")
 
-frame = customtkinter.CTkFrame(master=root)
-frame.pack(pady=20,
-           padx=60,
-           fill="both",
-           expand=True
-           )
+
 
 Greeting = customtkinter.CTkLabel(master=root,
                                   text=f"Hello {os.getlogin()}",
-                                  font=("Roboto",24)
+                                  font=("Roboto",40)
                                   )
 Greeting.place(relx=0.5,
                rely=0.1,
@@ -52,7 +47,7 @@ Entry_for_path.place(relx=0.5,
                      )
 
 question_for_path = customtkinter.CTkLabel(master=root,
-                                           text="Now we need you to enter a directory path, in which filtered files will go:\n",
+                                           text="Now we need you to enter a directory path,\n in which filtered files will go:\n",
                                            font=("Roboto",20)
                                            )
 question_for_path.place(relx=0.5,
