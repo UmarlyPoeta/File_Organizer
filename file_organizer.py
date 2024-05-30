@@ -40,13 +40,14 @@ question_for_path.place(
     anchor=tkinter.CENTER
     )
 
-Entry_for_path = customtkinter.CTkEntry(
+entry_for_path = customtkinter.CTkEntry(
     master=root,
-    width=280,
+    placeholder_text="Enter the path to a directory with files to organize",
+    width=350,
     height=30,
     corner_radius=15
     )
-Entry_for_path.place(
+entry_for_path.place(
     relx=0.5,
     rely=0.3,
     anchor=tkinter.CENTER
@@ -63,19 +64,21 @@ question_for_path.place(
     anchor=tkinter.CENTER
     )
 
-Entry_for_direction_path = customtkinter.CTkEntry(
+entry_for_direction_path = customtkinter.CTkEntry(
     master=root,
-    width=280,
+    placeholder_text="Enter the path to a direction directory",
+    width=350,
     height=30,
     corner_radius=15
     )
-Entry_for_direction_path.place(relx=0.5,
+entry_for_direction_path.place(relx=0.5,
                                rely=0.6,
                                anchor=tkinter.CENTER
                                )
 
 # Main functionality
 def main_functionality():
+    
     Issue_alert = customtkinter.CTkLabel(
         master=root,
         text=f"Path does not exist",
@@ -87,20 +90,27 @@ def main_functionality():
         font=("Roboto",24)
         )
     
-    path = Entry_for_path.get()
-    filtered_path = Entry_for_direction_path.get()
+    path = entry_for_path.get()
+    filtered_path = entry_for_direction_path.get()
+ 
+    #checks if path exists
     try:
+        os.chdir(filtered_path)
         os.chdir(path)
     except:
-        Issue_alert.place(relx=0.5,
-                          rely=0.9,
-                          anchor=tkinter.CENTER
-                          )
-        print("Path does not exist")
+        Issue_alert.place(
+            relx=0.5,
+            rely=0.9,
+            anchor=tkinter.CENTER
+            )
         return None
-    Issue_alert.place()
+    
+    Issue_alert.place_forget()
+    Success_alert.place_forget()
+    
     os.chdir(path)
-    get_extensions()
+    
+    #get_extensions()
 
     #create_directories(filtered_path)
 
@@ -114,15 +124,17 @@ def main_functionality():
 
 button_to_start_the_function = customtkinter.CTkButton(
     master=root,
-    fg_color="lightgray",
     width=200,
     height=60,
-    text="Enter to start",
+    text="START",
     font=("Roboto",20),
-    text_color="black",
     command=main_functionality
     )
-button_to_start_the_function.place(relx=0.5,rely=0.8,anchor=tkinter.CENTER)
+button_to_start_the_function.place(
+    relx=0.5,
+    rely=0.8,
+    anchor=tkinter.CENTER
+    )
 
 
 # Helper functions
@@ -160,50 +172,6 @@ def check_which_folder_and_move2(file_extension, file, filtered_path):
         Path("OTHER").mkdir(exist_ok=True)
         shutil.move(file, f"{filtered_path}\OTHER")
 
-#primitive
-def check_which_folder_and_move(file_extension, file, filtered_path):
-    if file_extension in extensions.text_formats_extensions:
-        Path("Document type").mkdir(exist_ok=True)
-        shutil.move(file, f"{filtered_path}\Document type")
-    elif file_extension in extensions.video_extensions:
-        Path("Video").mkdir(exist_ok=True)
-        shutil.move(file, f"{filtered_path}\Video")
-    elif file_extension in extensions.internet_related_extensions:
-        Path("Internet related").mkdir(exist_ok=True)
-        shutil.move(file, f"{filtered_path}\Internet related")
-    elif file_extension in extensions.image_extensions:
-        Path("Image").mkdir(exist_ok=True)
-        shutil.move(file, f"{filtered_path}\Image")
-    elif file_extension in extensions.exec_extensions:
-        Path("Execution files").mkdir(exist_ok=True)
-        shutil.move(file, f"{filtered_path}\Execution files")
-    elif file_extension in extensions.disk_extensions:
-        Path("Disks").mkdir(exist_ok=True)
-        shutil.move(file, f"{filtered_path}\Disks")
-    elif file_extension in extensions.audio_extensions:
-        Path("Audio").mkdir(exist_ok=True)
-        shutil.move(file, f"{filtered_path}\Audio")
-    elif file_extension in extensions.compressed_extensions:
-        Path("Compressed").mkdir(exist_ok=True)
-        shutil.move(file, f"{filtered_path}\Compressed")
-    elif file_extension in extensions.spreadsheet_extensions:
-        Path("Spreadsheets").mkdir(exist_ok=True)
-        shutil.move(file, f"{filtered_path}\Spreadsheets")
-    elif file_extension in extensions.presentation_extensions:
-        Path("Presentations").mkdir(exist_ok=True)
-        shutil.move(file, f"{filtered_path}\Presentations")
-    elif file_extension in extensions.fonts_extensions:
-        Path("Fonts").mkdir(exist_ok=True)
-        shutil.move(file, f"{filtered_path}\Fonts")
-    elif file_extension in extensions.data_extensions:
-        Path("Data").mkdir(exist_ok=True)
-        shutil.move(file, f"{filtered_path}\Data")
-    elif file_extension in extensions.system_related_extensions:
-        Path("System files").mkdir(exist_ok=True)
-        shutil.move(file, f"{filtered_path}\System files")
-    else:
-        Path("Other").mkdir(exist_ok=True)
-        shutil.move(file, f"{filtered_path}\Other")
 
 def move_files_version_category(path,filtered_path):
     os.chdir(path)
@@ -212,7 +180,6 @@ def move_files_version_category(path,filtered_path):
         file_extension = file_extension.strip(".")
         if file_extension != "":
             check_which_folder_and_move2(file_extension, file, filtered_path)
-            print(file_extension)
 #
 
 

@@ -2,26 +2,29 @@
 
 ## Overview
 
-This Python script organizes files in a specified directory by their extensions through a graphical user interface (GUI). It creates separate folders for each file extension in a user-defined directory and moves the corresponding files into these folders.
+This Python script is designed to organize files in a specified directory by moving them into subdirectories based on their file extensions or categories. The script features a graphical user interface (GUI) built with CustomTkinter.
 
 ## Features
 
-- Graphical User Interface (GUI) using CustomTkinter.
-- Prompts the user to input a source directory path containing the files to be organized.
-- Prompts the user to input a destination directory path where the organized files will be stored.
-- Scans the specified source directory and identifies all file extensions.
-- Creates a folder for each unique file extension in the specified destination directory.
-- Moves files into their respective extension folders in the destination directory.
-- Provides feedback on whether the operation was successful or if there was an error with the provided paths.
+- **Graphical User Interface (GUI)**: The program uses CustomTkinter to provide a user-friendly interface.
+- **Organize by Extension or Category**: Files can be organized by their extensions or by predefined categories (e.g., documents, images, videos).
+- **Error Handling**: The program checks for the existence of the provided paths and alerts the user if the path does not exist.
 
 ## Prerequisites
 
 - Python 3.x installed on your system.
-- Install required libraries:
-  - `customtkinter`
-  - `tkinter`
-- Basic knowledge of using the command line or terminal.
-- Ensure the destination directory exists and is writable.
+- The CustomTkinter and Tkinter libraries.
+- A file named `extensions.py` containing predefined categories and their associated file extensions.
+
+### Installing Required Libraries
+
+You can install CustomTkinter using pip:
+
+```bash
+pip install customtkinter
+```
+
+Ensure you also have Tkinter installed, which is usually included with Python installations.
 
 ## Installation
 
@@ -39,29 +42,22 @@ This Python script organizes files in a specified directory by their extensions 
     cd path_to_script_directory
     ```
 
-3. **Install the required packages:**
-
-    ```bash
-    pip install customtkinter
-    ```
+3. **Ensure you have the `extensions.py` file in the same directory as the script.**
 
 ## Usage
 
 1. **Run the script:**
 
     ```bash
-    python file_organizer_gui.py
+    python file_organizer.py
     ```
 
-2. **Follow the on-screen prompts:**
+2. **Enter the required paths in the GUI:**
 
-    - Enter the path to the directory you want to organize in the first entry box.
-    - Enter the path to the directory where you want the organized files to be moved in the second entry box.
+    - **Source Directory**: The path to the directory containing the files you want to organize.
+    - **Destination Directory**: The path to the directory where the organized files will be moved.
 
-3. **Click the "Enter to start" button:**
-
-    - The script will scan the source directory, create directories in the destination directory based on file extensions, and move files accordingly.
-    - If the provided source path does not exist, an alert will be displayed.
+3. **Click the "START" button to begin organizing the files.**
 
 ## Example
 
@@ -89,7 +85,7 @@ D:\FILE_ORGANIZER\
 
 ## Code Explanation
 
-The script is divided into several functions and a GUI setup for better readability and maintainability:
+The script is divided into several functions for better readability and maintainability:
 
 ```python
 import os
@@ -97,8 +93,8 @@ from pathlib import Path
 import shutil
 import customtkinter
 import tkinter
+import extensions
 
-# Global variables and GUI setup
 list_of_extensions = []
 root = customtkinter.CTk()
 root.geometry("1000x500")
@@ -107,47 +103,121 @@ root.title("FILE ORGANIZER")
 customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("dark-blue")
 
-Greeting = customtkinter.CTkLabel(master=root, text=f"Hello {os.getlogin()}", font=("Roboto", 24))
-Greeting.place(relx=0.5, rely=0.1, anchor=tkinter.CENTER)
+Greeting = customtkinter.CTkLabel(
+    master=root,
+    text=f"Hello {os.getlogin()}",
+    font=("Roboto", 40)
+)
+Greeting.place(
+    relx=0.5,
+    rely=0.1,
+    anchor=tkinter.CENTER
+)
 
-question_for_path = customtkinter.CTkLabel(master=root, text="Enter the path: ", font=("Roboto", 20))
-question_for_path.place(relx=0.5, rely=0.2, anchor=tkinter.CENTER)
+question_for_path = customtkinter.CTkLabel(
+    master=root,
+    text="Enter the path: ",
+    font=("Roboto", 20)
+)
+question_for_path.place(
+    relx=0.5,
+    rely=0.2,
+    anchor=tkinter.CENTER
+)
 
-Entry_for_path = customtkinter.CTkEntry(master=root, width=280, height=30, corner_radius=15)
-Entry_for_path.place(relx=0.5, rely=0.3, anchor=tkinter.CENTER)
+entry_for_path = customtkinter.CTkEntry(
+    master=root,
+    placeholder_text="Enter the path to a directory with files to organize",
+    width=350,
+    height=30,
+    corner_radius=15
+)
+entry_for_path.place(
+    relx=0.5,
+    rely=0.3,
+    anchor=tkinter.CENTER
+)
 
-question_for_path = customtkinter.CTkLabel(master=root, text="Now we need you to enter a directory path, in which filtered files will go:", font=("Roboto", 20))
-question_for_path.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+question_for_path = customtkinter.CTkLabel(
+    master=root,
+    text="Now we need you to enter a directory path,\n in which filtered files will go:\n",
+    font=("Roboto", 20)
+)
+question_for_path.place(
+    relx=0.5,
+    rely=0.5,
+    anchor=tkinter.CENTER
+)
 
-Entry_for_direction_path = customtkinter.CTkEntry(master=root, width=280, height=30, corner_radius=15)
-Entry_for_direction_path.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
+entry_for_direction_path = customtkinter.CTkEntry(
+    master=root,
+    placeholder_text="Enter the path to a direction directory",
+    width=350,
+    height=30,
+    corner_radius=15
+)
+entry_for_direction_path.place(relx=0.5,
+                               rely=0.6,
+                               anchor=tkinter.CENTER
+                               )
 
-# Main functionality
 def main_functionality():
-    Issue_alert = customtkinter.CTkLabel(master=root, text="Path does not exist", font=("Roboto", 24))
-    Success_alert = customtkinter.CTkLabel(master=root, text="The files were organized", font=("Roboto", 24))
-    
-    path = Entry_for_path.get()
-    filtered_path = Entry_for_direction_path.get()
+    Issue_alert = customtkinter.CTkLabel(
+        master=root,
+        text=f"Path does not exist",
+        font=("Roboto", 24)
+    )
+    Success_alert = customtkinter.CTkLabel(
+        master=root,
+        text=f"The files were organized",
+        font=("Roboto", 24)
+    )
+
+    path = entry_for_path.get()
+    filtered_path = entry_for_direction_path.get()
+
     try:
+        os.chdir(filtered_path)
         os.chdir(path)
-    except FileNotFoundError:
-        Issue_alert.place(relx=0.5, rely=0.9, anchor=tkinter.CENTER)
+    except:
+        Issue_alert.place(
+            relx=0.5,
+            rely=0.9,
+            anchor=tkinter.CENTER
+        )
         return None
+
     Issue_alert.place_forget()
-    get_extensions()
-    create_directories(filtered_path)
-    move_files(path, filtered_path)
-    Success_alert.place(relx=0.5, rely=0.9, anchor=tkinter.CENTER)
+    Success_alert.place_forget()
 
-button_to_start_the_function = customtkinter.CTkButton(master=root, fg_color="lightgray", width=200, height=60, text="Enter to start", font=("Roboto", 20), text_color="black", command=main_functionality)
-button_to_start_the_function.place(relx=0.5, relx=0.8, anchor=tkinter.CENTER)
+    os.chdir(path)
 
-# Helper functions
+    move_files_version_category(path, filtered_path)
+    Success_alert.place(
+        relx=0.5,
+        rely=0.9,
+        anchor=tkinter.CENTER
+    )
+
+
+button_to_start_the_function = customtkinter.CTkButton(
+    master=root,
+    width=200,
+    height=60,
+    text="START",
+    font=("Roboto", 20),
+    command=main_functionality
+)
+button_to_start_the_function.place(
+    relx=0.5,
+    relx=0.8,
+    anchor=tkinter.CENTER
+)
+
 def get_extensions():
     for file in os.listdir():
-        file_extension = os.path.splitext(file)[1]  # Split the file name and its extension
-        list_of_extensions.append(file_extension.strip(".").upper())  # Collect unique extensions in uppercase
+        file_extension = os.path.splitext(file)[1]
+        list_of_extensions.append(file_extension.strip(".").upper())
 
 def create_directories(filtered_path):
     os.chdir(filtered_path)
@@ -160,7 +230,27 @@ def move_files(path, filtered_path):
         file_extension = os.path.splitext(file)[1]
         file_extension = file_extension.strip(".").upper()
         if file_extension != "":
-            shutil.move(file, f"{filtered_path}\\{file_extension}")
+            shutil.move(file, f"{filtered_path}\{file_extension}")
+
+def check_which_folder_and_move2(file_extension, file, filtered_path):
+    was_changed = False
+    for ext_list_and_name in extensions.extensions:
+        if file_extension in ext_list_and_name[0]:
+            Path(ext_list_and_name[1]).mkdir(exist_ok=True)
+            shutil.move(file, f"{filtered_path}\{ext_list_and_name[1]}")
+            was_changed = True
+            break
+    if not was_changed:
+        Path("OTHER").mkdir(exist_ok=True)
+        shutil.move(file, f"{filtered_path}\OTHER")
+
+def move_files_version_category(path, filtered_path):
+    os.chdir(path)
+    for file in os.listdir():
+        file_extension = os.path.splitext(file)[1]
+        file_extension = file_extension.strip(".")
+        if file_extension != "":
+            check_which_folder_and_move2(file_extension, file, filtered_path)
 
 if __name__ == "__main__":
     root.mainloop()
@@ -168,30 +258,26 @@ if __name__ == "__main__":
 
 ### Function Descriptions
 
-- **get_path()**: Prompts the user to enter a directory path.
-- **get_extensions()**: Scans the source directory and collects file extensions.
-- **create_directories(filtered_path)**: Creates directories based on the collected file extensions in the destination directory.
-- **move_files(path, filtered_path)**: Moves files from the source directory to their respective extension directories in the destination directory.
-- **main_functionality()**: Orchestrates the execution of the above functions and handles the main workflow, including GUI interactions.
+- **get_path(prompt)**: Pobiera ścieżkę od użytkownika na podstawie przekazanego komunikatu.
+- **get_extensions()**: Skanuje katalog źródłowy i zbiera rozszerzenia plików.
+- **create_directories(filtered_path)**: Tworzy katalogi na podstawie zebranych rozszerzeń plików w katalogu docelowym.
+- **move_files(path, filtered_path)**: Przenosi pliki z katalogu źródłowego do odpowiednich katalogów w katalogu docelowym.
+- **check_which_folder_and_move2(file_extension, file, filtered_path)**: Sprawdza, do jakiego folderu przenieść plik na podstawie jego rozszerzenia.
+- **move_files_version_category(path, filtered_path)**: Przenosi pliki z katalogu źródłowego do odpowiednich katalogów w katalogu docelowym na podstawie kategorii.
 
 ### Key Modules Used
 
 - `os`: Provides functions for interacting with the operating system, like changing directories and listing files.
 - `pathlib`: Offers an object-oriented interface to handle filesystem paths.
 - `shutil`: Contains high-level file operations, such as copying and moving files.
-- `customtkinter`: Provides advanced and customizable widgets for the GUI.
-- `tkinter`: Standard Python interface to the Tk GUI toolkit.
+- `customtkinter` and `tkinter`: Used for creating the graphical user interface.
 
 ## Notes
 
 - The script assumes that the provided paths are valid and accessible.
 - Ensure that the destination directory exists and is writable.
-- If the directory contains files with no extensions, they will not be moved.
+- If the directory contains files with no extensions, they will be moved to an "OTHER" directory.
 
 ## License
 
 This project is licensed under the MIT License.
-
----
-
-Feel free to modify and adapt the script to your needs. Contributions are welcome!
