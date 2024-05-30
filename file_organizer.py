@@ -4,14 +4,14 @@ import shutil
 import customtkinter
 import tkinter
 
-#################################################
+# Global variables
 list_of_extensions = []
 root = customtkinter.CTk()
 root.geometry("1000x500")
 root.title(" FILE ORGANIZER")
-#################################################
 
-#################################################
+
+# GUI setup
 customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("dark-blue")
 
@@ -71,7 +71,7 @@ Entry_for_direction_path.place(relx=0.5,
                                anchor=tkinter.CENTER
                                )
 
-############################################
+# Main functionality
 def main_functionality():
     Issue_alert = customtkinter.CTkLabel(
         master=root,
@@ -106,7 +106,7 @@ def main_functionality():
                         rely=0.9,
                         anchor=tkinter.CENTER
                         )
-##########################################
+
 
 button_to_start_the_function = customtkinter.CTkButton(master=root,
                                                        fg_color="lightgray",
@@ -118,9 +118,8 @@ button_to_start_the_function = customtkinter.CTkButton(master=root,
                                                        command=main_functionality)
 button_to_start_the_function.place(relx=0.5,rely=0.8,anchor=tkinter.CENTER)
 
-############################################################################
 
-##########################################################################
+# Helper functions
 def get_extensions():
     for file in os.listdir():
         file_extension = os.path.splitext(file)[1]  # Split the file name and its extension
