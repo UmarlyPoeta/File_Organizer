@@ -107,9 +107,6 @@ root.title("FILE ORGANIZER")
 customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("dark-blue")
 
-frame = customtkinter.CTkFrame(master=root)
-frame.pack(pady=20, padx=60, fill="both", expand=True)
-
 Greeting = customtkinter.CTkLabel(master=root, text=f"Hello {os.getlogin()}", font=("Roboto", 24))
 Greeting.place(relx=0.5, rely=0.1, anchor=tkinter.CENTER)
 
