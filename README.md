@@ -68,7 +68,7 @@ pip install customtkinter
 - **check_which_folder_and_move(file_extension, file, filtered_path):** Moves files to predefined category directories.
 - **move_files_version_category(path, filtered_path):** Organizes and moves files into category directories.
 
-## Example `extensions` Module
+## `extensions` Module
 
 Ensure you have an `extensions` module that defines the categories for file organization. An `extensions.py` might look like this:
 
