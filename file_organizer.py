@@ -10,11 +10,16 @@ list_of_extensions = []
 root = customtkinter.CTk()
 root.geometry("1000x500")
 root.title(" FILE ORGANIZER")
+organize_mode = customtkinter.StringVar(
+    value="Organize by categories"
+    )
+
 
 
 # GUI setup
 customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("dark-blue")
+
 
 
 
@@ -76,9 +81,31 @@ entry_for_direction_path.place(relx=0.5,
                                anchor=tkinter.CENTER
                                )
 
+label_of_the_organize_mode = customtkinter.CTkLabel(
+    master=root,
+    text=f"Choose the method of\n organizing your files:",
+    font=("Roboto",20)
+)
+label_of_the_organize_mode.place(
+    relx=0.8,
+    rely=0.7,
+    anchor = tkinter.CENTER
+)
+
+choser_of_the_organize_mode = customtkinter.CTkComboBox(
+    root,
+    width=300,
+    values=["Organize by categories", "Organize by extensions"],
+    variable=organize_mode
+    )
+choser_of_the_organize_mode.place(
+    relx=0.8,
+    rely=0.8,
+    anchor=tkinter.CENTER
+    )
+
 # Main functionality
 def main_functionality():
-    
     Issue_alert = customtkinter.CTkLabel(
         master=root,
         text=f"Path does not exist",
@@ -92,6 +119,7 @@ def main_functionality():
     
     path = entry_for_path.get()
     filtered_path = entry_for_direction_path.get()
+    mode = choser_of_the_organize_mode.get()
  
     #checks if path exists
     try:
@@ -110,11 +138,14 @@ def main_functionality():
     
     os.chdir(path)
     
-    #get_extensions()
-
-    #create_directories(filtered_path)
-
-    move_files_version_category(path,filtered_path)
+    if mode == "Organize by extensions":
+        get_extensions()
+        create_directories(filtered_path)
+        move_files(path,filtered_path)
+    else:    
+        move_files_version_category(path,filtered_path)
+    
+    
     Success_alert.place(
         relx=0.5,
         rely=0.9,
@@ -160,7 +191,7 @@ def move_files(path,filtered_path):
 
 ## CATEGORY VERSION
 #automated
-def check_which_folder_and_move2(file_extension, file, filtered_path):
+def check_which_folder_and_move(file_extension, file, filtered_path):
     was_changed = False
     for ext_list_and_name in extensions.extensions:
         if file_extension in ext_list_and_name[0]:
@@ -179,7 +210,7 @@ def move_files_version_category(path,filtered_path):
         file_extension = os.path.splitext(file)[1]
         file_extension = file_extension.strip(".")
         if file_extension != "":
-            check_which_folder_and_move2(file_extension, file, filtered_path)
+            check_which_folder_and_move(file_extension, file, filtered_path)
 #
 
 
