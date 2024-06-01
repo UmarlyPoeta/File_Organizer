@@ -4,6 +4,7 @@ import shutil
 import customtkinter
 import tkinter
 import extensions
+import tkinter.messagebox
 
 # Global variables
 list_of_extensions = []
@@ -106,16 +107,6 @@ choser_of_the_organize_mode.place(
 
 # Main functionality
 def main_functionality():
-    Issue_alert = customtkinter.CTkLabel(
-        master=root,
-        text=f"Path does not exist",
-        font=("Roboto",24)
-        )
-    Success_alert = customtkinter.CTkLabel(
-        master=root,
-        text=f"The files were organized",
-        font=("Roboto",24)
-        )
     
     path = entry_for_path.get()
     filtered_path = entry_for_direction_path.get()
@@ -126,15 +117,9 @@ def main_functionality():
         os.chdir(filtered_path)
         os.chdir(path)
     except:
-        Issue_alert.place(
-            relx=0.5,
-            rely=0.9,
-            anchor=tkinter.CENTER
-            )
+        error_box("The path does not exist")
         return None
     
-    Issue_alert.place_forget()
-    Success_alert.place_forget()
     
     os.chdir(path)
     
@@ -142,15 +127,11 @@ def main_functionality():
         get_extensions()
         create_directories(filtered_path)
         move_files(path,filtered_path)
+        list_of_extensions.clear()
     else:    
         move_files_version_category(path,filtered_path)
     
-    
-    Success_alert.place(
-        relx=0.5,
-        rely=0.9,
-        anchor=tkinter.CENTER
-        )
+    error_box("The files were organized")
 
 
 button_to_start_the_function = customtkinter.CTkButton(
@@ -167,6 +148,13 @@ button_to_start_the_function.place(
     anchor=tkinter.CENTER
     )
 
+# HANDLING ERRORS
+def error_box(msg):
+    window_for_error = tkinter.Tk()
+    window_for_error.wm_withdraw()
+    tkinter.messagebox.showinfo(title="Error", message=msg)
+    window_for_error.destroy()
+    return None
 
 # Helper functions
 ## EXTENSION VERSION
@@ -212,6 +200,8 @@ def move_files_version_category(path,filtered_path):
         if file_extension != "":
             check_which_folder_and_move(file_extension, file, filtered_path)
 #
+
+
 
 
 # __name__ check and tkinter mainloop
