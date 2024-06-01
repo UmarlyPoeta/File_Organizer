@@ -97,7 +97,8 @@ choser_of_the_organize_mode = customtkinter.CTkComboBox(
     root,
     width=300,
     values=["Organize by categories", "Organize by extensions"],
-    variable=organize_mode
+    variable=organize_mode,
+    corner_radius=15
     )
 choser_of_the_organize_mode.place(
     relx=0.8,
@@ -119,7 +120,6 @@ def main_functionality():
     except:
         error_box("The path does not exist")
         return None
-    
     
     os.chdir(path)
     
