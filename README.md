@@ -30,8 +30,8 @@ pip install customtkinter
 
 1. **Clone the repository or download the script:**
    ```bash
-   git clone <repository-url>
-   cd <repository-directory>
+   git clone [<repository-url>](https://github.com/UmarlyPoeta/File_Organizer.git)
+   cd File_Organizer
    ```
 
 2. **Run the script:**
